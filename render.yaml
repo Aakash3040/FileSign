@@ -1,0 +1,23 @@
+# One-click deploy on Render (Blueprint). A persistent disk keeps the database
+# and signed PDFs across restarts; disks need a paid instance (Starter).
+services:
+  - type: web
+    name: filesign
+    runtime: docker
+    plan: starter
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /data
+      - key: APP_URL
+        sync: false   # e.g. https://filesign.onrender.com
+      - key: SMTP_URL
+        sync: false   # optional, e.g. smtps://resend:API_KEY@smtp.resend.com:465
+      - key: MAIL_FROM
+        sync: false   # optional, e.g. FileSign <sign@yourdomain.com>
+    disk:
+      name: filesign-data
+      mountPath: /data
+      sizeGB: 1

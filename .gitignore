@@ -1,0 +1,6 @@
+node_modules/
+data/
+.env
+samples/signed-*.pdf
+*.log
+.claude/

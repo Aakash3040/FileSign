@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API reference — FileSign</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+  pre { background: #0f1424; color: #dfe6ff; padding: 14px; border-radius: 8px; overflow: auto; font-size: 12.5px; }
+  .ep { font-family: ui-monospace, Consolas, monospace; font-weight: 700; }
+  section.card { margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<header class="topbar"><a class="logo" href="/" id="logo">FileSign</a><div class="spacer"></div><a class="btn" href="/app#/settings">Get your API key</a></header>
+<main class="main" style="max-width:860px">
+  <h1>API reference</h1>
+  <p class="muted">Automate the agreement on every file: when your case or practice management system opens a file, call FileSign and the client receives the agreement to sign. Authenticate with your workspace API key (Settings → Integrations).</p>
+  <section class="card pad"><h2>Authentication</h2><pre>Authorization: Bearer fs_live_…</pre><p class="muted small" style="margin:0">All requests and responses are JSON unless noted. Errors return <code>{"error": "message"}</code> with a 4xx/5xx status.</p></section>
+
+  <section class="card pad"><h2><span class="ep">POST /api/files</span></h2>
+    <p>Open a file and send the agreement. Uses the workspace's default agreement unless <code>template_id</code> is given.</p>
+<pre>{
+  "client_name": "Jordan Example",          // required
+  "client_email": "jordan@example.com",     // required
+  "ref": "F-1001",                          // your file/case number (auto-generated if omitted)
+  "template_id": "tpl_…",                   // optional
+  "values": { "Policy Number": "P-123" },   // custom fields, keyed by field label or id
+  "message": "Please sign so we can start.",// optional, shown to the client
+  "send_email": true                        // email the client (if email is configured)
+}</pre>
+    <p class="small muted">Response includes <code>id</code>, <code>status</code> and <code>signing_url</code>, which you can embed in your own portal, SMS or email.</p></section>
+
+  <section class="card pad"><h2><span class="ep">POST /api/files/bulk</span></h2><pre>{ "template_id": "tpl_…", "send_email": true, "files": [ { "client_name": "…", "client_email": "…", "ref": "…" } ] }</pre></section>
+  <section class="card pad"><h2><span class="ep">GET /api/files</span> · <span class="ep">GET /api/files/:id</span></h2><p class="small muted" style="margin:0">List files (filters: <code>status</code> = pending | completed | declined | expired | voided, <code>q</code> = search) or get one with its full audit trail.</p></section>
+  <section class="card pad"><h2><span class="ep">GET /api/files/:id/document.pdf</span></h2><p class="small muted" style="margin:0">The signed PDF (with certificate of completion) once completed, otherwise the document as sent.</p></section>
+  <section class="card pad"><h2><span class="ep">POST /api/files/:id/remind</span> · <span class="ep">POST /api/files/:id/void</span></h2></section>
+  <section class="card pad"><h2><span class="ep">GET /api/templates</span> · <span class="ep">POST /api/templates</span></h2>
+    <p class="small muted">Upload an agreement as raw bytes (<code>Content-Type: application/pdf</code>, <code>?filename=agreement.pdf</code>) or JSON <code>{"filename","name","content_base64"}</code>. Fields are detected automatically; review them in the app before sending.</p></section>
+
+  <section class="card pad"><h2>Webhooks</h2>
+    <p>Set a webhook URL in Settings. FileSign POSTs events: <code>file.sent</code>, <code>file.viewed</code>, <code>file.completed</code>, <code>file.declined</code>, <code>file.voided</code>.</p>
+<pre>POST https://your-system.example.com/filesign
+X-FileSign-Event: file.completed
+X-FileSign-Signature: sha256=&lt;HMAC-SHA256 of raw body with your webhook secret&gt;
+
+{ "event": "file.completed", "created_at": "…", "file": { "id": "file_…", "ref": "F-1001", "status": "completed", … } }</pre>
+<pre>// Node.js verification
+const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(rawBody).digest('hex');
+if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(req.headers['x-filesign-signature']))) reject();</pre>
+  </section>
+</main>
+<script type="module">import { LOGO } from '/common.js'; document.getElementById('logo').insertAdjacentHTML('afterbegin', LOGO);</script>
+</body>
+</html>

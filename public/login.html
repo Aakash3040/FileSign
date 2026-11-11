@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — FileSign</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="auth">
+  <a class="logo" href="/" id="logo" style="justify-content:center;margin-bottom:24px">FileSign</a>
+  <div class="card pad">
+    <h1 id="title">Sign in</h1>
+    <p class="muted" id="sub">Welcome back.</p>
+    <form id="form" class="stack">
+      <label class="field signup-only"><span>Company name</span><input name="orgName" autocomplete="organization" placeholder="e.g. Northwind Advisory"></label>
+      <label class="field signup-only"><span>Your name</span><input name="name" autocomplete="name"></label>
+      <label class="field"><span>Work email</span><input name="email" type="email" autocomplete="email" required></label>
+      <label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required minlength="8"><div class="hint signup-only">At least 8 characters.</div></label>
+      <div id="err" class="notice bad hidden"></div>
+      <button class="btn primary lg" style="width:100%" id="submit">Sign in</button>
+    </form>
+  </div>
+  <p class="muted" style="text-align:center;margin-top:16px" id="switch"></p>
+</div>
+<script type="module">
+import { api, LOGO } from '/common.js';
+document.getElementById('logo').insertAdjacentHTML('afterbegin', LOGO);
+const signup = location.pathname.startsWith('/signup');
+const $ = (s) => document.querySelector(s);
+document.querySelectorAll('.signup-only').forEach((el) => el.classList.toggle('hidden', !signup));
+if (signup) {
+  document.title = 'Create your workspace — FileSign';
+  $('#title').textContent = 'Create your workspace';
+  $('#sub').textContent = 'One workspace for your company. Takes 30 seconds.';
+  $('#submit').textContent = 'Create workspace';
+  $('[name=password]').autocomplete = 'new-password';
+  $('[name=orgName]').required = true; $('[name=name]').required = true;
+  $('#switch').innerHTML = 'Already have an account? <a href="/login">Sign in</a>';
+} else {
+  $('#switch').innerHTML = 'New to FileSign? <a href="/signup">Create a workspace</a>';
+}
+api('/api/me', { allow401: true }).then(() => location.replace('/app')).catch(() => {});
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const body = Object.fromEntries(new FormData(e.target));
+  $('#submit').disabled = true; $('#err').classList.add('hidden');
+  try {
+    await api(signup ? '/api/auth/signup' : '/api/auth/login', { method: 'POST', body, allow401: true });
+    location.href = '/app';
+  } catch (err) {
+    $('#err').textContent = err.message; $('#err').classList.remove('hidden'); $('#submit').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "filesign",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FileSign — get your standard client agreement signed on every file, automatically.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "samples": "node scripts/make-samples.js",
+    "detect": "node scripts/detect.js",
+    "test": "node scripts/e2e.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "4.21.2",
+    "mammoth": "1.8.0",
+    "nodemailer": "6.9.16",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "4.10.38"
+  }
+}

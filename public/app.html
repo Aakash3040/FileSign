@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FileSign</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232851c7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="#/" id="logo">FileSign</a>
+  <nav class="nav">
+    <a href="#/" data-nav="files">Files</a>
+    <a href="#/templates" data-nav="templates">Agreements</a>
+    <a href="#/settings" data-nav="settings">Settings</a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="muted small who" id="who"></span>
+  <button class="btn sm ghost" id="logout">Sign out</button>
+</header>
+<main class="main" id="view"></main>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FileSign — client agreements signed on every file</title>
+<meta name="description" content="Upload your standard client agreement once. FileSign gets it signed on every new file, automatically.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232851c7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" id="logo">FileSign</a>
+  <div class="spacer"></div>
+  <a class="btn ghost" href="/verify">Verify a document</a>
+  <a class="btn" href="/login">Sign in</a>
+  <a class="btn primary" href="/signup">Get started</a>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Your client agreement, signed on every file. Automatically.</h1>
+    <p class="lead">Upload the agreement every client has to sign. FileSign finds the signature, name and date lines on its own, fills in the client's details, and gets it signed before work starts — no printing, scanning or chasing.</p>
+    <div class="row wrap" style="margin-top:26px">
+      <a class="btn primary lg" href="/signup">Start free — upload your agreement</a>
+      <a class="btn lg" href="/login">Sign in</a>
+    </div>
+    <p class="small muted" style="margin-top:14px">Works with any PDF or Word agreement. Your clients sign on any device without creating an account.</p>
+  </div>
+  <div class="card pad">
+    <h3 style="margin-bottom:16px">How it works</h3>
+    <ol class="steps">
+      <li><b>Upload your agreement once.</b><br><span class="muted">PDF or Word. Signature, name, date and placeholder fields like <code>[Client Name]</code> are detected for you.</span></li>
+      <li><b>Open a file.</b><br><span class="muted">Enter the client's name and email — or let your case management system do it through the API.</span></li>
+      <li><b>The client signs.</b><br><span class="muted">They get a link, review the agreement, adopt a signature and sign in about two minutes. Reminders go out automatically.</span></li>
+      <li><b>You're done.</b><br><span class="muted">The signed PDF and a certificate of completion with a full audit trail are stored on the file and sent to both sides.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="features">
+  <div class="card pad"><h3>Works with agreements it has never seen</h3><p class="muted">Field detection reads the document's text and layout. If there's no signature line at all, a signature page is added so any agreement can be executed.</p></div>
+  <div class="card pad"><h3>Every file tracked</h3><p class="muted">See who has signed, who opened it, and who needs a nudge. Automatic reminders and link expiry keep files moving.</p></div>
+  <div class="card pad"><h3>Audit-ready</h3><p class="muted">ESIGN/UETA consent, IP and device capture, SHA-256 document fingerprints and a tamper check anyone can run.</p></div>
+  <div class="card pad"><h3>Firm countersignature</h3><p class="muted">Fields for your side — signer name, date, signature — are completed automatically when the file is sent.</p></div>
+  <div class="card pad"><h3>Plugs into your systems</h3><p class="muted">REST API and signed webhooks so a new file in your practice management system sends the agreement on its own.</p></div>
+  <div class="card pad"><h3>Built for teams</h3><p class="muted">One workspace per company, multiple users, multiple agreement templates, and a default agreement for every new file.</p></div>
+</section>
+<footer class="site">FileSign · Demo environment — use test data only.</footer>
+<script type="module">
+import { LOGO } from '/common.js';
+document.getElementById('logo').insertAdjacentHTML('afterbegin', LOGO);
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Review and sign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  body { background: #e9ebf1; }
+  .signbar { position: sticky; top: 0; z-index: 60; background: #fff; border-bottom: 1px solid var(--line); padding: 10px 16px 12px; display: flex; align-items: center; gap: 10px; }
+  .signbar .doc { min-width: 0; flex: 1; line-height: 1.3; }
+  .signbar .doc b, .signbar .doc span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--line); overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: var(--ok); width: 0; transition: width .3s; }
+  .doc-area { padding: 20px 12px 120px; }
+  .sf { position: absolute; border-radius: 3px; display: flex; align-items: center; }
+  .sf.todo { background: rgba(255, 196, 0, .22); outline: 2px solid #f0b400; }
+  .sf.todo.opt { background: rgba(40, 81, 199, .08); outline: 1.5px dashed #7d95dd; }
+  .sf.done { background: rgba(18, 128, 92, .06); outline: 1px solid rgba(18,128,92,.35); }
+  .sf.focus { outline: 3px solid var(--brand) !important; z-index: 4; animation: pulse 1.2s ease 2; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(40,81,199,.25); } }
+  .sf input[type=text] { width: 100%; height: 100%; border: 0; background: transparent; padding: 0 3px; border-radius: 0; color: #0d1a59; }
+  .sf input[type=text]:focus { outline: none; background: rgba(255,255,255,.6); }
+  .sf button.sigbtn { all: unset; cursor: pointer; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #6b4b00; font-size: 12px; gap: 4px; white-space: nowrap; overflow: hidden; }
+  .sf img { max-width: 100%; max-height: 100%; display: block; margin: 0; }
+  .sf .datev { padding: 0 3px; color: #0d1a59; white-space: nowrap; }
+  .sf input[type=checkbox] { width: 100%; height: 100%; margin: 0; }
+  .flag { position: absolute; left: -64px; background: #f0b400; color: #3d2a00; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px 0 0 4px; white-space: nowrap; pointer-events: none; }
+  .flag::after { content: ""; position: absolute; right: -8px; top: 0; border: 9.5px solid transparent; border-left: 8px solid #f0b400; border-right: 0; }
+  @media (max-width: 700px) { .flag { display: none; } }
+  .center { max-width: 560px; margin: 48px auto; padding: 0 16px; }
+  .sigpad { border: 1px solid var(--line-2); border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 160px; display: block; }
+  .typed { font-family: 'Dancing Script', 'Caveat', cursive; font-size: 38px; color: #0d1a59; border: 1px solid var(--line-2); border-radius: 8px; height: 90px; display: flex; align-items: center; padding: 0 18px; overflow: hidden; white-space: nowrap; }
+  .disclosure { font-size: 12.5px; color: var(--ink-2); background: #f8f9fc; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; max-height: 180px; overflow: auto; }
+</style>
+</head>
+<body>
+<div id="root"><div class="center muted" style="text-align:center">Loading…</div></div>
+<script type="module" src="/sign.js"></script>
+</body>
+</html>

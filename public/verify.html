@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verify a signed document — FileSign</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar"><a class="logo" href="/" id="logo">FileSign</a></header>
+<div class="center" style="max-width:600px;margin:48px auto;padding:0 16px">
+  <div class="card pad stack">
+    <h1>Verify a signed document</h1>
+    <p class="muted" style="margin:0">Check that a PDF signed through FileSign is authentic and has not been changed since it was signed. The file is fingerprinted (SHA-256) and compared against our records.</p>
+    <div class="dropzone" id="drop"><input type="file" id="fi" accept="application/pdf,.pdf" hidden><b>Drop the signed PDF here, or click to choose</b></div>
+    <div id="out"></div>
+  </div>
+</div>
+<script type="module">
+import { api, esc, LOGO, fmtDateTime } from '/common.js';
+document.getElementById('logo').insertAdjacentHTML('afterbegin', LOGO);
+const drop = document.getElementById('drop'), fi = document.getElementById('fi'), out = document.getElementById('out');
+const check = async (file) => {
+  if (!file) return;
+  out.innerHTML = '<div class="notice">Checking…</div>';
+  try {
+    const r = await api('/api/verify', { method: 'POST', body: file, headers: { 'content-type': 'application/pdf' } });
+    out.innerHTML = r.valid
+      ? `<div class="notice ok"><b>Authentic and unaltered.</b><br>${esc(r.document)} signed by ${esc(r.signer)} for ${esc(r.organization)} on ${fmtDateTime(r.signed_at)}.<br><span class="small">Envelope ${esc(r.envelope_id)}</span></div>`
+      : `<div class="notice bad"><b>No match.</b> This exact file was not produced by FileSign, or it has been modified after signing.<div class="small mono" style="word-break:break-all;margin-top:6px">SHA-256 ${esc(r.sha256)}</div></div>`;
+  } catch (e) { out.innerHTML = `<div class="notice bad">${esc(e.message)}</div>`; }
+};
+drop.onclick = () => fi.click();
+fi.onchange = () => check(fi.files[0]);
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove('over'); check(e.dataTransfer.files[0]); };
+</script>
+</body>
+</html>
