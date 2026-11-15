@@ -4,8 +4,7 @@
 
 The firm uploads the agreement every client has to sign. FileSign reads it, finds where the client needs to sign and fill in details, and works out which details the firm can fill in itself. After that, opening a file takes a client name and email. You can do it by hand, by CSV, or through the API from a case-management system. The client signs on any device without creating an account. The signed PDF, with a certificate of completion and an audit trail, goes back on the file.
 
-- **Live app:** `<SUBMISSION URL>`
-- **Repository:** `<GITHUB URL>`
+- **Live app:** `filesign-production.up.railway.app`
 
 ---
 
