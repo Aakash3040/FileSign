@@ -276,8 +276,14 @@ async function analyzePdf(pdfBuf, { orgName } = {}) {
       for (let k = lineIdx; k >= 0 && lines[lineIdx].base - lines[k].base < 220; k--) {
         const segs = lines[k].items.filter((i) => Math.abs(i.x - x) < 160 || (i.x <= x && i.x + i.w >= x));
         const txt = (segs.length ? segs : lines[k].items).map((i) => i.str).join(' ');
-        if (k !== lineIdx && CLIENT_PARTY.test(txt) && !SENDER_PARTY.test(txt)) return 'client';
-        if (k !== lineIdx && SENDER_PARTY.test(txt) && !CLIENT_PARTY.test(txt)) return 'sender';
+        if (k === lineIdx) continue;
+        if (CLIENT_PARTY.test(txt) && !SENDER_PARTY.test(txt)) return 'client';
+        if (SENDER_PARTY.test(txt) && !CLIENT_PARTY.test(txt)) return 'sender';
+        // Two-column block where only the other column is recognisably the client
+        // (e.g. "CLIENT" | "NORTHWIND ADVISORY LLC"): this column is the other party.
+        const others = lines[k].items.filter((i) => !segs.includes(i)).map((i) => i.str).join(' ');
+        if (segs.length && txt.trim().length <= 60 && !/_{4,}/.test(txt) && !/[a-z]{3,}.*:/.test(txt)
+          && CLIENT_PARTY.test(others) && !SENDER_PARTY.test(others)) return 'sender';
       }
       return 'client';
     };

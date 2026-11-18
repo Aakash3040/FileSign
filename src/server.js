@@ -20,7 +20,9 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '6mb' }));
 
 // ------------------------------------------------------------------ helpers
-const baseUrl = (req) => (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+// APP_URL may be set without a scheme (e.g. "app.example.com"); without one, links become relative paths.
+const appUrl = () => { const u = (process.env.APP_URL || '').trim().replace(/\/+$/, ''); return u && !/^https?:\/\//i.test(u) ? `https://${u}` : u; };
+const baseUrl = (req) => appUrl() || `${req.protocol}://${req.get('host')}`;
 const signUrl = (req, f) => `${baseUrl(req)}/sign/${f.token}`;
 const fileUrl = (req, f) => `${baseUrl(req)}/app#/files/${f.id}`;
 const ipOf = (req) => (req.ip || '').replace(/^::ffff:/, '');
@@ -569,10 +571,10 @@ async function sweep() {
   try {
     const expired = db.prepare("SELECT id FROM files WHERE status IN ('sent','viewed') AND expires_at < ?").all(now());
     for (const e of expired) { db.prepare("UPDATE files SET status = 'expired' WHERE id = ?").run(e.id); logEvent(e.id, 'expired', { actor: 'system' }); }
-    if (!mail.enabled() || !process.env.APP_URL) return;
+    if (!mail.enabled() || !appUrl()) return;
     const due = db.prepare(`SELECT f.* FROM files f JOIN orgs o ON o.id = f.org_id WHERE f.status IN ('sent','viewed') AND o.reminder_days > 0
       AND f.reminder_count < 3 AND julianday('now') - julianday(COALESCE(f.last_reminder_at, f.sent_at)) >= o.reminder_days`).all();
-    for (const f of due) await sendReminder(f, process.env.APP_URL.replace(/\/$/, ''));
+    for (const f of due) await sendReminder(f, appUrl());
   } catch (e) { console.error('sweep failed', e); }
 }
 setInterval(sweep, 15 * 60e3).unref();
